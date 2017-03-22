@@ -1,0 +1,7 @@
+namespace{
+class PoseStamped
+{
+    short b;
+};
+
+}

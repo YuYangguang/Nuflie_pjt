@@ -1,0 +1,9 @@
+namespace nuflie{
+class AngleCount
+{
+    public:
+    short count;
+  
+};
+
+}

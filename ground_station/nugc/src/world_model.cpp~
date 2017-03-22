@@ -1,0 +1,9 @@
+#include <stdio.h>
+#include <signal.h>
+#include <time.h>
+#include "nuflie/world_model/world_model.h"
+using namespace nuflie;
+NuFlie::World_Model::World_Model(int argc,char** argv,const char * name)
+{
+
+}

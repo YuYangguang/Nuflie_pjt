@@ -1,0 +1,71 @@
+cmake_minimum_required(VERSION 2.8.3)
+project(nugc)
+
+## Find catkin macros and libraries
+## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
+## is used, also find other catkin packages
+find_package(catkin REQUIRED COMPONENTS
+  roscpp
+  std_msgs
+  mavros
+  mavros_extras
+  geometry_msgs
+  tf2_ros
+  eigen_conversions
+  angles
+  message_generation
+  cmake_modules
+  dynamic_reconfigure
+  message_filters
+  rospy
+  std_srvs
+  smarteye_common
+  world_model
+
+)
+
+#find_package(world_model )
+
+## System dependencies are found with CMake's conventions
+# find_package(Boost REQUIRED COMPONENTS system)
+find_package(Boost REQUIRED COMPONENTS system)
+
+
+find_package(Threads)
+
+set(nugc_includes
+               include
+               ${catkin_INCLUDE_DIRS}
+               ${Boost_INCLUDE_DIRS}
+               /include
+
+)
+
+include_directories(${nugc_includes})
+add_library(nugc  STATIC)
+add_dependencies(nugc ${catkin_EXPORTED_TARGETS})
+target_link_libraries(nugc
+    ${catkin_LIBRARIES}
+)
+include(EnableCXX11)
+
+
+catkin_package(
+)
+
+include_directories(${nugc_includes})
+
+
+add_executable(nugc_node
+ src/main.cpp
+  src/nugc.cpp)
+target_link_libraries(nugc_node 
+                     
+   ${catkin_LIBRARIES}
+   ${Boost_LIBRARIES}
+   world_model
+
+ )
+
+
+

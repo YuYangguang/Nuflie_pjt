@@ -1,0 +1,39 @@
+<launch>
+
+
+<arg name="viconName"  default="/vicon/nuflie02/nuflie02"/>
+<arg name="gcs_url" default="udp://192.168.2.171@192.168.2.164:14550" />
+<arg name="node_name" default="nuflie" />
+<group ns="$(arg node_name)">
+        <arg name="fcu_url" default="/dev/ttyUSB0:921600" />
+
+	<arg name="tgt_system" default="1" />
+	<arg name="tgt_component" default="1" />
+	<arg name="log_output" default="screen" />
+
+	<include file="$(find mavros)/launch/node.launch">
+		<arg name="pluginlists_yaml" value="$(find mavros)/launch/px4_pluginlists.yaml" />
+		<arg name="config_yaml" value="$(find mavros)/launch/px4_config.yaml" />
+
+		<arg name="fcu_url" value="$(arg fcu_url)" />
+		<arg name="gcs_url" value="$(arg gcs_url)" />
+		<arg name="tgt_system" value="$(arg tgt_system)" />
+		<arg name="tgt_component" value="$(arg tgt_component)" />
+		<arg name="log_output" value="$(arg log_output)" />
+                <param name="mocap/use_tf" value="false"/>
+                <param name="mocap/use_pose" value="true"/>
+	</include>
+
+	<include file="$(find world_model)/launch/world_model.launch">
+	</include>
+</group>
+
+      <node name="$(arg node_name)" pkg="px4_controller" type="px4_control_node"  output="screen">
+            <param name="viconName" value="$(arg viconName)" />
+            <param name="initAngle" value="0" />
+      </node>
+
+        <include file="$(find vicon_bridge)/launch/vicon.launch">
+	</include>
+
+</launch>

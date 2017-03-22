@@ -1,0 +1,69 @@
+# Configuration file for RTDB items.
+# - It is composed of 3 sections: agents, items, and schemas.
+#   - The agents section is a comma-separated list of agent's ids.
+#   - The items section is a list of items.
+#     - An item is composed of an id, a datatype, the headerfile where
+#       the datatype is declared, and a period.
+#     - The item format is described bellow.
+#   - The schema section is a newline- or semicolon-separated list of schemas.
+#     - A schema is an arrangement of items,
+#       each one labelled as either shared or local.
+#     - A schema must also be assigned to 1 or more agents.
+#     - The schema formar is described bellow.
+# - Everything from # to end of line is discarded.
+# - Empty lines are also discarded.
+# - In the comments bellow square brackets define an optional component.
+
+# Agent declaration section
+#   it is a comma-separated list of agent's ids
+#
+# AGENTS = «id» [, «id» , ...] [;]
+#
+AGENTS = Agent0, Agent1, Agent2, Agent3;
+
+# Item declaration section
+#
+# ITEM «id» { datatype = «id»; [headerfile = «filename»];
+#	[period = «number»]; }
+# headerfile defaults to «datatype» plus ".h". For instance if datatype = abc,
+#   then headerfile defaults to abc.h
+# period defaults to 1
+#
+
+ITEM STATION2UAVINFO {datatype = station2UAVInfo; headerfile = station2UAVInfo.h }
+ITEM UAV2STATIONINFO {datatype = UAV2stationInfo; headerfile = UAV2stationInfo.h }
+
+ITEM UAV2UAVINFO {datatype = UAV2UAVInfo; headerfile = UAV2UAVInfo.h }
+
+
+# SCHEMA definition section
+#
+# SCHEMA «id» { [shared = «id» [ , «id», ...] ; ]
+
+#    [local = «id» [, «id», ...] ; ]
+#
+
+SCHEMA STATION2UAV
+{
+  shared =  STATION2UAVINFO;
+}
+
+
+
+SCHEMA UAV2STATION
+{
+  shared =  UAV2STATIONINFO;
+}
+
+SCHEMA UAV2UAV
+{
+  shared =  UAV2UAV;
+}
+# ASSIGNMENT definition section
+#
+# ASSIGNMENT { schema = «id»; agents = «id», ... ; }
+#
+
+ASSIGNMENT { schema = STATION2UAV; agents =  Agent0, Agent1, Agent2, Agent3; }
+ASSIGNMENT { schema = UAV2STATION; agents =  Agent0, Agent1, Agent2, Agent3; }
+ASSIGNMENT { schema = UAV2UAV; agents =  Agent0, Agent1, Agent2, Agent3; }

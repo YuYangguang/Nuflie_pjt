@@ -1,0 +1,4 @@
+Header header
+int32    AgentID
+geometry_msgs/Pose  localPosition
+geometry_msgs/Pose  setPosition

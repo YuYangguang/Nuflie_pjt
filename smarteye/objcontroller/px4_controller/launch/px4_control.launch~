@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<launch>
+<arg name="frame" default="/vicon/nuflie01/nuflie01" />
+<arg name="mavros_name" default="mavros01" />
+
+    <include file="$(find px4_controller)/launch/px4_controller.launch">
+      <arg name="frame" value="$(arg frame)" />
+    </include>
+
+    <include file="$(find px4_controller)/launch/px4.launch">
+      <arg name="mavros_name" value="$(arg mavros_name)" />
+    </include>
+     <node name="px4_control_node" pkg="px4_controller" type="px4_control_node" output="screen">
+    </node>
+    <node pkg="tf" type="static_transform_publisher" name="baselink_broadcaster" args="0 0 0 0 0 0 1 $(arg frame) /px4/base_link 100" />
+
+
+ 
+
+
+  <!-- run rviz 
+  <param name="robot_description" command="$(find xacro)/xacro.py $(find crazyflie_description)/urdf/crazyflie.urdf.xacro" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find crazyflie_demo)/launch/crazyflie_pos.rviz" required="true" />-->
+
+</launch>

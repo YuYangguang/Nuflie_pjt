@@ -1,0 +1,14 @@
+#include "nuflie/world_model/obstacles.h"
+
+using namespace nuflie;
+nuflie::obstacles::obstacles(void)
+{
+
+}
+
+nuflie::obstacles::~obstacles(void)
+{
+    
+}
+
+

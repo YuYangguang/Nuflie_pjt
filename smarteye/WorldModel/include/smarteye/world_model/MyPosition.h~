@@ -1,0 +1,18 @@
+#include <std_msgs/Header.h>
+
+namespace nuflie{
+class UAV2station
+{
+  public:
+    std_msgs::Header header;
+    short local_x;
+    short local_y;
+    short local_z;
+    short set_x;
+    short set_y;
+    short set_z;
+  
+};
+}
+
+

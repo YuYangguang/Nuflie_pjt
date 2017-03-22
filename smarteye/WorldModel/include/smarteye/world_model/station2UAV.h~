@@ -1,0 +1,13 @@
+#include <std_msgs/Header.h>
+
+namespace nuflie{
+
+class Key
+{
+public:
+ std_msgs::Header header;
+ int code;
+ int modifier;
+};
+
+}

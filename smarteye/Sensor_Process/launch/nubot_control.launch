@@ -1,0 +1,3 @@
+<launch>
+<node name="NuFlie_sensor_node" pkg="NuFlie_sensor" type="NuFlie_sensor_node"/>
+</launch>
