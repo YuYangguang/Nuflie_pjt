@@ -76,7 +76,8 @@ void MavlinkHandler::ConnectToSerialPort(QString port)
     pSerialConfig->setBaud(57600);
     pSerialConfig->setPortName(port);
 
-    m_pSerialLinkLink = new SerialLink(SharedLinkConfigurationPointer(pSerialConfig));
+    SharedLinkConfigurationPointer * pconfig = new SharedLinkConfigurationPointer(pSerialConfig);
+    m_pSerialLinkLink = new SerialLink(*pconfig);
     m_pSerialLinkLink->_setMavlinkChannel(1);
 
     bool ret = m_pSerialLinkLink->_connect();

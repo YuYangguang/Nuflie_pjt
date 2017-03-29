@@ -35,12 +35,12 @@ generate_messages(DEPENDENCIES std_msgs)
 set(NuFlie_sensor_includes
                include
                ${catkin_INCLUDE_DIRS}
-               ${PROJECT_SOURCE_DIR}/include/sensor_process
 )
-
+file(GLOB source_files "${PROJECT_SOURCE_DIR}/src/*.cpp" )
 include_directories(${NuFlie_sensor_includes})
 
-add_library(sensor_process  STATIC
+add_library(sensor_process  ${source_files} ${NuFlie_sensor_includes}
+
 
 )
 
@@ -68,6 +68,7 @@ add_executable(sensor_process_node src/main.cpp
                                   src/GPS.cpp
                                   src/IMU.cpp
                                   src/sonar.cpp
+                                  ${NuFlie_sensor_includes}
 
 )
 add_dependencies(sensor_process_node ${catkin_EXPORTED_TARGETS})

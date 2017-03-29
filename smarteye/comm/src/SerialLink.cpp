@@ -35,6 +35,7 @@ SerialLink::SerialLink(SharedLinkConfigurationPointer& config)
     , _reqReset(false)
     , _serialConfig(qobject_cast<SerialConfiguration*>(config.data()))
 {
+    //_port->clearError();
     Q_ASSERT(_serialConfig);
 
     qCDebug(SerialLinkLog) << "Create SerialLink " << _serialConfig->portName() << _serialConfig->baud() << _serialConfig->flowControl()

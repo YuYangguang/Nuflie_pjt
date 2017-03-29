@@ -21,6 +21,13 @@ public:
     void _handleHeartbeat(mavlink_message_t message);
     void _handleVfrHud(mavlink_message_t message);
 
+    void writeBytes(const char* buffer, int len);
+public slots:
+    void receiveBytes(LinkInterface* link, QByteArray b);
+
+signals:
+    void Update_handleHeartbeat(QString s);
+    void Update_handleHeading(QString s);
 };
 
 #endif // MAVLINKHANDLER_H
