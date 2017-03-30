@@ -26,7 +26,7 @@ public:
     void update(const ros::TimerEvent& event);
     ros::Timer      nugc_update_timer_;
     boost::shared_ptr<ros::NodeHandle> nh;
-
+    mavlink_msg_mission_item_
 
 public:
     smarteye_common::station2UAVMsg instruction_info_;

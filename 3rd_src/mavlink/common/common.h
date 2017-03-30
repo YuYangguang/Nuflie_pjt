@@ -996,6 +996,7 @@ typedef enum GPS_FIX_TYPE
 #include "./mavlink_msg_mission_request_partial_list.h"
 #include "./mavlink_msg_mission_write_partial_list.h"
 #include "./mavlink_msg_mission_item.h"
+
 #include "./mavlink_msg_mission_request.h"
 #include "./mavlink_msg_mission_set_current.h"
 #include "./mavlink_msg_mission_current.h"

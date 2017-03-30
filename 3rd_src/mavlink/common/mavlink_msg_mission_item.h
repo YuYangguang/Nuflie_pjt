@@ -2,7 +2,6 @@
 // MESSAGE MISSION_ITEM PACKING
 
 #define MAVLINK_MSG_ID_MISSION_ITEM 39
-
 MAVPACKED(
 typedef struct __mavlink_mission_item_t {
  float param1; /*< PARAM1, see MAV_CMD enum*/

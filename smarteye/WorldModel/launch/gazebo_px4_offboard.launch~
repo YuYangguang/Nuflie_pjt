@@ -1,0 +1,8 @@
+<launch>
+  <!-- a basic listener node -->
+  <node name="keyboard" pkg="keyboard" type="keyboard"/>
+  <!-- pass args to the listener node -->
+  <node name="px4_offboard_mission" pkg="px4_offboard_mission" type="px4_offboard_mission" output="screen"/> 
+  
+</launch>
+

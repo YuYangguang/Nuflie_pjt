@@ -33,11 +33,12 @@ find_package(Boost REQUIRED COMPONENTS system)
 
 find_package(Threads)
 
+
 set(nugc_includes
                include
                ${catkin_INCLUDE_DIRS}
                ${Boost_INCLUDE_DIRS}
-               /include
+${PROJECT_SOURCE_DIR}/../../3rd_src/mavlink
 
 )
 

@@ -5,13 +5,11 @@
 
 //#include <smarteye/core/core.hpp>
 
-#include "SerialLink.h"
-#include "QGCSerialPortInfo.h"
-#include <QGeoCoordinate>
+
+
 #include <stdio.h>
 #include <string>
 #include <iostream>
-#include <signal.h>
 #include <boost/thread.hpp>
 #include <ros/ros.h>
 #include <std_msgs/Int32.h>
@@ -24,10 +22,11 @@
 #include <mavros_msgs/WaypointPush.h>
 #include <mavros_msgs/Waypoint.h>
 #include <mavros_msgs/WaypointList.h>
+#include <serial/serial.h>
 namespace smarteye {
-class comm: public QObject
+class comm
 {
-    Q_OBJECT
+
 public:
     comm(int argc,char** argv,const char * name);
     ~comm();
@@ -37,12 +36,10 @@ public:
 public:
     int  AgentID_;
     ros::Publisher  commInfo_pub_;
-    ros::Publisher  heartbeatPub;
-    ros::Publisher  vfrHudPub;
     ros::Publisher  rawIMUPub;
     ros::Timer      commUpdateTimer;
     boost::shared_ptr<ros::NodeHandle> nh;
-    SerialLink* m_pSerialLinkLink;
+    serial::Serial ser; //声明串口对象
 
 
     ros::ServiceClient arming_client;
@@ -58,17 +55,6 @@ public:
     void sendCommand(const keyboard::Key &key);
     void change_wp(const mavros_msgs::WaypointList & wp_list);
 
-    //串口
-    void ConnectToSerialPort(QString port);
-
-    //消息解析
-    void _handleHeartbeat(mavlink_message_t message);
-    void _handleVfrHud(mavlink_message_t message);
-    void _handleRawImu(mavlink_message_t message);
-
-    void writeBytes(const char* buffer, int len);
-public slots:
-    void receiveBytes(LinkInterface* link, QByteArray b);
 
 
 };

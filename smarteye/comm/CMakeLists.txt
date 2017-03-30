@@ -1,6 +1,6 @@
 
 project(comm)
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 2.8)
 set(CMAKE_CXX_STANDARD 14)
 #set(CMAKE_BUILD_TYPE "Release") #using CMAKE_BUILD_TYPE to set the cmake method [Debug | Release]
 # CMAKE_CXX_FLAGS CMake C++
@@ -22,36 +22,25 @@ find_package(catkin REQUIRED COMPONENTS
     std_msgs
     std_srvs
     mavros
+    serial
     )
 
-#find QT libraries  
-find_package(mavlink REQUIRED) 
-find_package(Qt5SerialPort REQUIRED) 
-find_package(Qt5Widgets REQUIRED)  
-find_package(Qt5Core REQUIRED)  
-find_package(Qt5Gui REQUIRED)  
-find_package(Qt5Positioning REQUIRED) 
 
-file(GLOB source_files "${PROJECT_SOURCE_DIR}/src/*.cpp" )
-file(GLOB Headers "include/*.h")
-QT5_WRAP_CPP(HEADERS_MOC ${Headers})
+
+
+
 
 find_package(Threads)
 set(comm_includes
     include
-    include/mavlink
-    include/GpsDriver
+    ${PROJECT_SOURCE_DIR}/../../3rd_src/mavlink
     ${catkin_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
-    ${Qt5Gui_INCLUDE_DIRS} ${Qt5Widgets_INCLUDE_DIRS} ${Qt5OpenGL_INCLUDE_DIRS} ${Qt5Xml_INCLUDE_DIRS} ${Qt5Core_INCLUDE_DIRS} ${Qt5SerialPort_INCLUDE_DIRS}  ${Qt5Positioning_INCLUDE_DIRS}
-
     )
 
 include_directories(${comm_includes})
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})  
-add_library(comm  ${source_files}
-    ${HEADERS_MOC}
-
+add_library(comm  src/comm.cpp
     )
 add_dependencies(comm ${catkin_EXPORTED_TARGETS})
 target_link_libraries(comm
@@ -61,17 +50,13 @@ target_link_libraries(comm
 catkin_package(
     INCLUDE_DIRS   include
     CATKIN_DEPENDS dynamic_reconfigure  message_generation  roscpp rospy  std_msgs std_srvs mavros
-    LIBRARIES comm
     )
 
 message("CMakePath=${CMAKE_PREFIX_PATH}")
 link_directories(${LIBRARY_OUTPUT_PATH}) 
 add_executable(comm_node
-    ${PROJECT_SOURCE_DIR}/include/GpsDriver/src/gps_helper.cpp
-    ${PROJECT_SOURCE_DIR}/include/GpsDriver/GPSProvider.cpp
-    ${PROJECT_SOURCE_DIR}/include/GpsDriver/src/ubx.cpp
-    ${source_files}
-    ${HEADERS_MOC}
+               src/comm.cpp
+               src/main.cpp
     )
 
 
@@ -80,7 +65,8 @@ add_executable(comm_node
 target_link_libraries(comm_node
     ${catkin_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
-    ${Qt5Core_LIBRARIES}  ${Qt5Widgets_LIBRARIES}  ${Qt5SerialPort_LIBRARIES} ${Qt5Positioning_LIBRARIES}
 
     )
+
+
 add_dependencies(comm_node ${catkin_EXPORTED_TARGETS})

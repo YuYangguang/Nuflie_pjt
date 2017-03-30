@@ -19,6 +19,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   std_srvs
+serial
 )
 
 
@@ -30,7 +31,6 @@ set(world_model_includes
                include
                ${catkin_INCLUDE_DIRS}
                ${Boost_INCLUDE_DIRS}
-
 )
 
 include_directories(${world_model_includes})
@@ -60,6 +60,7 @@ target_link_libraries(world_model_node
    ${CMAKE_THREAD_LIBS_INIT}
     world_model
 )
+
 add_dependencies(world_model_node ${catkin_EXPORTED_TARGETS})
 
 
