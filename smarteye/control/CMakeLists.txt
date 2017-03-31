@@ -10,6 +10,17 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++0x")
 #    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3 -pthread -fopenmp")
 #endif( CMAKE_BUILD_TYPE STREQUAL "Debug" )
 
+
+find_package(Eigen3)
+if(NOT EIGEN3_FOUND)
+  # Fallback to cmake_modules
+  find_package(cmake_modules REQUIRED)
+  find_package(Eigen REQUIRED)
+  set(EIGEN3_INCLUDE_DIRS ${EIGEN_INCLUDE_DIRS})
+  set(EIGEN3_LIBRARIES ${EIGEN_LIBRARIES})
+endif()
+
+
 find_package(catkin REQUIRED COMPONENTS
   cmake_modules
   message_generation
@@ -20,6 +31,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_srvs
   smarteye_common
   world_model
+  eigen_conversions
 )
 
 

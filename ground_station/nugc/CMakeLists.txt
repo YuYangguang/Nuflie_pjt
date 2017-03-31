@@ -21,6 +21,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_srvs
   smarteye_common
   world_model
+ serial
 
 )
 

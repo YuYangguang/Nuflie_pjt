@@ -1,7 +1,7 @@
 //#include "smarteye/world_model/WorldModel.h"
 #include <stdio.h>
 #include <comm.h>
-#include <standard/mavlink.h>
+
 
 using namespace smarteye;
 int main(int argc, char **argv)
@@ -70,7 +70,8 @@ int main(int argc, char **argv)
                     ROS_INFO("This is 13");
                     break;
                 case MAVLINK_MSG_ID_HIL_ACTUATOR_CONTROLS:
-                    ROS_INFO("This is 14");
+                    ROS_INFO("control received");
+                    this_comm.handleHILActuatorControls(&msg);
                     break;
                 case MAVLINK_MSG_ID_GPS_RAW_INT:
                     ROS_INFO("This is 15");
@@ -97,11 +98,13 @@ int main(int argc, char **argv)
                     ROS_INFO("This is home");
                     break;
                 case MAVLINK_MSG_ID_MISSION_ITEM:
-                    ROS_INFO("This is home");
+                    ROS_INFO("points received");
+                    this_comm.handleMissionItem(&msg);
                     break;
                 case MAVLINK_MSG_ID_PARAM_VALUE:
                     ROS_INFO("This is home");
                     break;
+
                 }
             }
 

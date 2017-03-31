@@ -15,7 +15,7 @@
 #include <smarteye_common/dataTransMsg.h>
 #include <smarteye_common/imgTransMsg.h>
 #include <standard/mavlink.h>
-
+#include <serial/serial.h>
 namespace smarteye {
 class nugc
 {
@@ -26,19 +26,18 @@ public:
     void update(const ros::TimerEvent& event);
     ros::Timer      nugc_update_timer_;
     boost::shared_ptr<ros::NodeHandle> nh;
-
+    serial::Serial ser; //声明串口对象
 
 public:
-    smarteye_common::station2UAVMsg instruction_info_;
-    smarteye_common::UAV2stationMsg feedback_info_;
+
+
 
     /*********************data interaction interface********************/
     /*******************here is for data transmitter**************/
-    smarteye_common::dataTransMsg dTransReceive_info_;   //data received from data transmitter
-    ros::Subscriber dataTransSubscriber;
-    void dataTransReceived(std_msgs::Int32 msg);        //receive data from data transmitter driver node
-    smarteye_common::dataTransMsg dTranSent_info_;   //data sent to data transmitter
-    ros::Publisher dataTrans_pub_;
+    void writeWaypoint(uint8_t frame, float x, float y, float z);
+    void writeCommand();
+    void handleLocalpose(mavlink_message_t* message);
+    ros::Publisher localPosPub;
 
     /******************here is for image transmitter************/
     smarteye_common::imgTransMsg  imgTransReceive_info_;   //data received from image transmitter
@@ -46,9 +45,9 @@ public:
     void imgTransReceived(std_msgs::Int32 msg);        //receive image from image transmitter driver node
 
     /*********************here is for command input********************/
-     keyboard::Key commandinput;
-     ros::Subscriber inputSubscriber;
-     void commandinputReceived(keyboard::KeyConstPtr msg);
+    ros::Subscriber inputSubscriber;
+    keyboard::Key command;
+    void commandinputReceived(keyboard::KeyConstPtr msg);
 
 
     /****************************************************************/
@@ -56,7 +55,7 @@ public:
 
 
 
-   
+
 
 };
 }
