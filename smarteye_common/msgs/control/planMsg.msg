@@ -1,2 +1,4 @@
 Header header
-int32 data
+float32 height
+float32 velocity
+float32 yaw

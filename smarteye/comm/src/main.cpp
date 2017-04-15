@@ -4,114 +4,72 @@
 
 
 using namespace smarteye;
+comm this_comm;
+static void *readPx4(void *ptr)
+{    mavlink_message_t msg;
+     mavlink_status_t status;
+      uint8_t buffer;
+       while(1)
+       {
+           while(px4Serial.available()!=0) // there exsits data in the serial buffer
+           {
+               px4Serial.read(&buffer,1);
+               if(mavlink_parse_char(MAVLINK_COMM_0, buffer, &msg, &status))
+               {
+                   //uint8_t buf[MAVLINK_MAX_PACKET_LEN];
+                   //uint16_t len = mavlink_msg_to_send_buffer(buf, &msg);
+                   //   P900Serial.write(buf,len);
+                   switch(msg.msgid)
+                   {
+
+                   case MAVLINK_MSG_ID_HEARTBEAT:
+                   {
+                       ROS_INFO("heartbeat received");
+//                       mavlink_heartbeat_t heartbeat;
+//                       mavlink_msg_heartbeat_decode(ms&g,&heartbeat);
+                       break;
+                   }
+                   case MAVLINK_MSG_ID_SYS_STATUS:
+                   {
+                       uint8_t buf[MAVLINK_MAX_PACKET_LEN];
+                       uint16_t len = mavlink_msg_to_send_buffer(buf, &msg);
+                       break;
+                   }
+                   case MAVLINK_MSG_ID_ATTITUDE:
+                   {
+                       this_comm.handleAttitudeItem(&msg);
+                       break;
+
+                   }
+                   case MAVLINK_MSG_ID_LOCAL_POSITION_NED:
+                   {
+                       this_comm.handleLocalPosNed(&msg);
+                       break;
+
+                   }
+                   }
+
+               }
+           }
+       }
+
+}
 int main(int argc, char **argv)
 {
-    mavlink_message_t msg;
-    mavlink_status_t status;
+
     ROS_INFO("start comm_node process");
     ros::Time::init();
-    comm this_comm(argc,argv,"comm_node");
+    this_comm.init(argc,argv,"comm_code");
+    int ret = pthread_create(&this_comm.threadPx4R, NULL, readPx4, NULL);
+    if(ret)
+    {
+        cout << "Create pthread error!" << endl;
+        return 0;
+    }
+
     ros::Rate loop_rate(50);
     while(ros::ok())
     {
-        while(this_comm.ser.available())
-        {
-            uint8_t buffer;
-            this_comm.ser.read(&buffer,1);
-            // Try to get a new message
-            if(mavlink_parse_char(MAVLINK_COMM_0, buffer, &msg, &status))
-            {
-                // Handle message
-
-                switch(msg.msgid)
-                {
-                case MAVLINK_MSG_ID_HOME_POSITION:
-                    ROS_INFO("This is home");
-                    break;
-                case MAVLINK_MSG_ID_HEARTBEAT:
-                    ROS_INFO("This is 1");
-                    break;
-                case MAVLINK_MSG_ID_RC_CHANNELS:
-                    ROS_INFO("This is 2");
-                    break;
-                case MAVLINK_MSG_ID_RC_CHANNELS_RAW:
-                    ROS_INFO("This is 3");
-                    break;
-                case MAVLINK_MSG_ID_BATTERY_STATUS:
-                    ROS_INFO("This is 4");
-                    break;
-                case MAVLINK_MSG_ID_SYS_STATUS:
-                    ROS_INFO("This is 5");
-                    break;
-                case MAVLINK_MSG_ID_RAW_IMU:
-                    ROS_INFO("This is 6");
-                    break;
-                case MAVLINK_MSG_ID_SCALED_IMU:
-                    ROS_INFO("This is 7");
-                    break;
-                case MAVLINK_MSG_ID_SCALED_IMU2:
-                    ROS_INFO("This is 8");
-                    break;
-                case MAVLINK_MSG_ID_SCALED_IMU3:
-                    ROS_INFO("This is 9");
-                    break;
-                case MAVLINK_MSG_ID_VIBRATION:
-                    ROS_INFO("This is 10");
-                    break;
-                case MAVLINK_MSG_ID_EXTENDED_SYS_STATE:
-                    ROS_INFO("This is 11");
-                    break;
-                case MAVLINK_MSG_ID_COMMAND_ACK:
-                    ROS_INFO("This is 12");
-                    break;
-                case MAVLINK_MSG_ID_AUTOPILOT_VERSION:
-                    break;
-                case MAVLINK_MSG_ID_WIND_COV:
-                    ROS_INFO("This is 13");
-                    break;
-                case MAVLINK_MSG_ID_HIL_ACTUATOR_CONTROLS:
-                    ROS_INFO("control received");
-                    this_comm.handleHILActuatorControls(&msg);
-                    break;
-                case MAVLINK_MSG_ID_GPS_RAW_INT:
-                    ROS_INFO("This is 15");
-                    break;
-                case MAVLINK_MSG_ID_GLOBAL_POSITION_INT:
-                    ROS_INFO("This is 16");
-                    break;
-                case MAVLINK_MSG_ID_ALTITUDE:
-                    ROS_INFO("This is 17");
-                    break;
-                case MAVLINK_MSG_ID_ATTITUDE:
-                    ROS_INFO("This is 18");
-                    break;
-                case MAVLINK_MSG_ID_VFR_HUD:
-                    ROS_INFO("This is 19");
-                    break;
-                case MAVLINK_MSG_ID_MISSION_REQUEST:
-                    ROS_INFO("This is home");
-                    break;
-                case MAVLINK_MSG_ID_MISSION_ACK:
-                    ROS_INFO("This is home");
-                    break;
-                case MAVLINK_MSG_ID_MISSION_COUNT:
-                    ROS_INFO("This is home");
-                    break;
-                case MAVLINK_MSG_ID_MISSION_ITEM:
-                    ROS_INFO("points received");
-                    this_comm.handleMissionItem(&msg);
-                    break;
-                case MAVLINK_MSG_ID_PARAM_VALUE:
-                    ROS_INFO("This is home");
-                    break;
-
-                }
-            }
-
-
-        }
-
-        //处理ROS的信息，比如订阅消息,并调用回调函数
 
         ros::spinOnce();
         loop_rate.sleep();

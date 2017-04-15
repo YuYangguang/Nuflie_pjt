@@ -34,7 +34,7 @@ find_package(catkin REQUIRED COMPONENTS
   eigen_conversions
 )
 
-
+LINK_DIRECTORIES(/home/ros16/NuFlie_pjt/devel/lib)
 
 generate_dynamic_reconfigure_options(cfg/NuFliecontrol.cfg)
 
@@ -61,20 +61,22 @@ include_directories(${control_includes})
 add_library(control  STATIC
 
 )
-
-add_dependencies(control ${catkin_EXPORTED_TARGETS})
-target_link_libraries(control
-    ${catkin_LIBRARIES}
-)
-
-add_executable(control_node src/control.cpp
-                            src/main.cpp
-
+target_link_libraries(control ${catkin_LIBRARIES}
 
 )
-add_dependencies(control_node ${catkin_EXPORTED_TARGETS})
+add_dependencies(control  ${catkin_EXPORTED_TARGETS})
+
+
+add_executable(control_node  src/main.cpp
+                             src/control.cpp
+                             src/plan.cpp
+                             src/strategy.cpp
+
+)
+
 target_link_libraries(control_node
-   ${catkin_LIBRARIES}
+${catkin_LIBRARIES}
+smarteye_common
  )
 
-
+add_dependencies(control_node  ${catkin_EXPORTED_TARGETS})

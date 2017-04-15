@@ -60,9 +60,14 @@ strategyMsg.msg
 add_message_files(DIRECTORY msgs/objcontroller
 FILES
 px4controllerMsg.msg
-
 )
 
+
+add_message_files(DIRECTORY msgs/comm
+FILES
+flightStateMsg.msg
+
+)
 
 generate_messages(DEPENDENCIES std_msgs geometry_msgs keyboard)
 
@@ -74,4 +79,12 @@ include_directories(${smarteye_common_includes})
 catkin_package(
   INCLUDE_DIRS ${smarteye_common_includes}
   INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/core/include
+)
+add_library(smarteye_common  STATIC
+                             core/src/MathCal.cpp
+
+)
+add_dependencies(smarteye_common  ${catkin_EXPORTED_TARGETS})
+target_link_libraries(smarteye_common
+    ${catkin_LIBRARIES}
 )

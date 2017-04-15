@@ -70,10 +70,6 @@ target_link_libraries(comm_node
     ${CMAKE_THREAD_LIBS_INIT}
 
     )
-target_link_libraries(bridge_node
-    ${catkin_LIBRARIES}
-    ${CMAKE_THREAD_LIBS_INIT}
 
-    )
 
 add_dependencies(comm_node ${catkin_EXPORTED_TARGETS})

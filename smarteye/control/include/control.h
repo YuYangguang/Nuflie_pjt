@@ -1,16 +1,22 @@
 #ifndef _CONTROL_H_
 #define _CONTROL_H_
+
+#include "plan.h"
+#include "smarteye_common/flightStateMsg.h"
+#include "smarteye_common/controlMsg.h"
 #include <smarteye_common/px4controllerMsg.h>
 #include <smarteye_common/WorldModelMsg.h>
 #include <smarteye_common/sensorMsg.h>
 #include <smarteye_common/planMsg.h>
 #include <smarteye_common/strategyMsg.h>
-#include <smarteye_common/behaviorMsg.h>
 #include <smarteye_common/controlMsg.h>
-
+#include <geometry_msgs/TwistStamped.h>
 #include <stdio.h>
 #include <ros/ros.h>
+
+
 namespace smarteye{
+
 class control
 {
 public:
@@ -20,23 +26,19 @@ public:
 public:
     ros::Publisher  controlInfoPub;
     ros::Timer      controlUpdateTimer;
+    ros::Publisher  velPub;
     boost::shared_ptr<ros::NodeHandle> nh;
     void update(const ros::TimerEvent& event);
-    smarteye_common::controlMsg  controlInfo;
-    smarteye_common::behaviorMsg behaviorInfo;
-    smarteye_common::planMsg planInfo;
-    smarteye_common::strategyMsg strategyInfo;
+    ros::Subscriber flightSateSub;
+    void receiveFlightSate(smarteye_common::flightStateMsg flightMsg);
+    Plan controlPlan;
+    DirectGuidInf directGuide;
+    CtrlStruct controlResult;
+    smarteye_common::controlMsg  controlResMSg;
+    ros::Publisher controlResultPub;
+    geometry_msgs::TwistStamped velCommand;
 
-    /********************interface for other nodes********************/
-public:
-    ros::Subscriber sensorInfoSubscriber;   //receive sensors informaton from sensor_process_node
-    void ReceiveSensorInfo(const smarteye_common::sensorMsgConstPtr& msg);
 
-    ros::Subscriber objcontrollerSubscriber;  //receive low-level control information from objcontroller_node
-    void ReceiveObjcontrolInfo(const smarteye_common::px4controllerMsgConstPtr& msg);
-
-    ros::Subscriber worldModelSubscriber;   //receive sensors informaton from sensor_process_node
-    void ReceiveWorldMdlInfo(const smarteye_common::WorldModelMsgConstPtr& msg);
 };
 
 

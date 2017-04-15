@@ -3,6 +3,8 @@
 
 
 #include <smarteye/core/core.hpp>
+#include "smarteye_common/flightStateMsg.h"
+#include "smarteye_common/controlMsg.h"
 #include <stdio.h>
 #include <string>
 #include <iostream>
@@ -12,6 +14,7 @@
 #include <std_msgs/Float32.h>
 #include <sensor_msgs/Imu.h>
 #include <keyboard/Key.h>
+
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/TwistStamped.h>
 #include <mavros_msgs/CommandBool.h>
@@ -22,50 +25,65 @@
 #include <mavros_msgs/WaypointList.h>
 #include <serial/serial.h>
 #include <standard/mavlink.h>
+#include <queue>
+#include <pthread.h>
+#include <tf/tf.h>
+using namespace std;
+
+
+extern serial::Serial px4Serial;
+extern serial::Serial P900Serial;
 namespace smarteye {
 class comm
 {
 
 public:
-    comm(int argc,char** argv,const char * name);
+    comm();
     ~comm();
-    void update(const ros::TimerEvent& event);
-
-
+    void init(int argc,char** argv,const char * name);
 public:
     int  AgentID_;
-    ros::Publisher  commInfo_pub_;
-    ros::Publisher  rawIMUPub;
+    smarteye_common::flightStateMsg flightState;
     ros::Publisher  commandPub;
+    ros::Publisher  flightStatePub;
+    smarteye_common::controlMsg controlResult;
+    ros::Subscriber controlResultSub;
     ros::Timer      commUpdateTimer;
     keyboard::Key   command;
     boost::shared_ptr<ros::NodeHandle> nh;
-    serial::Serial ser; //声明串口对象
-
     ros::ServiceClient arming_client;
     ros::ServiceClient set_mode_client;
-    ros::ServiceClient waypoint_push_client;
     ros::Subscriber commandSubscriber;
-    ros::Subscriber waypointsSubscriber;
-
-    ros::Subscriber localposSubscriber;
-    ros::Subscriber localvelSubscriber;
-    mavlink_local_position_ned_t localpose;
     mavros_msgs::SetMode offb_set_mode;
     mavros_msgs::State current_state;
     mavros_msgs::CommandBool arm_cmd;
-    mavros_msgs::Waypoint temp_waypoints[3];
-    mavros_msgs::WaypointPush waypoint_push;
-    //send command to mavros
     void sendCommand(const keyboard::Key &key);
-    void change_wp(const mavros_msgs::WaypointList & wp_list);
     void handleMissionItem(mavlink_message_t* message);
-    void handleHILActuatorControls(mavlink_message_t* message);
+    void handleHILActuatorControls(mavlink_message_t *message);
+    void handleAttitudeItem(mavlink_message_t *message);
+    void handleLocalPosNed(mavlink_message_t *message);
+    void receiveControlRes(smarteye_common::controlMsg result);
+    pthread_t threadPx4R;
+
+    //send command to mavros
+
     double commandTime;
-    void receiveLocalpos(geometry_msgs::PoseStamped pose);
-    void receiveLocalvel(geometry_msgs::TwistStamped vel);
-    void writeLocalPose();
+private:
+
+    pthread_t threadPx4W;
+    static pthread_mutex_t px4mutex;
+    static pthread_mutex_t P900mutex;
+    static pthread_mutex_t DPx42QGC_mutex;
+    static pthread_mutex_t DQGC2Px4_mutex;
+    static queue<uint8_t> DPx42QGC;
+    static queue<uint8_t> DQGC2Px4;
+    void update(const ros::TimerEvent& event);
+    void *writePx4(void *ptr);
+    void writeSetAttitude();
+
 };
+
+
 }
 
 
