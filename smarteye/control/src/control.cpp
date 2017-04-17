@@ -57,37 +57,41 @@ void control::receiveCommand(keyboard::Key key)
     {
         directGuide.Gd_Height++;
         ROS_INFO("height is %f",directGuide.Gd_Height);
+        break;
 
     }
     case '2':    //increase height
     {
         directGuide.Gd_Height--;
         ROS_INFO("height is %f",directGuide.Gd_Height);
+        break;
 
     }
     case '3':    //increase angle
     {
         directGuide.Gd_Ang++;
         ROS_INFO("angle is %f",directGuide.Gd_Ang);
+        break;
 
     }
     case '4':    //increase angle
     {
         directGuide.Gd_Ang--;
         ROS_INFO("angle is %f",directGuide.Gd_Ang);
+        break;
 
     }
     case '5':    //increase speed
     {
         directGuide.Gd_V++;
         ROS_INFO("speed is %f",directGuide.Gd_V);
-
+        break;
     }
     case '6':    //increase speed
     {
         directGuide.Gd_V--;
         ROS_INFO("speed is %f",directGuide.Gd_V);
-
+        break;
     }
     default:
     {

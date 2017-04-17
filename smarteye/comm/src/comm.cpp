@@ -111,7 +111,10 @@ void smarteye::comm::writeSetAttitude()
     float body_pitch_rate=pitch;
     float body_yaw_rate=yaw;
     mavlink_msg_set_attitude_target_pack(mavlink_system.sysid, mavlink_system.compid, &msg,
-                                         time_boot_ms,target_system, target_component, type_mask, q,  body_roll_rate, body_pitch_rate,  body_yaw_rate, thrust);
+        time_boot_ms,target_system, target_component, type_mask, q,  body_roll_rate, body_pitch_rate,  body_yaw_rate, thrust);
+    uint8_t buf[MAVLINK_MAX_PACKET_LEN];
+    uint16_t len = mavlink_msg_to_send_buffer(buf, &msg);
+    px4Serial.write(buf,len);
 
 }
 
