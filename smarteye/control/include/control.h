@@ -11,6 +11,7 @@
 #include <smarteye_common/strategyMsg.h>
 #include <smarteye_common/controlMsg.h>
 #include <geometry_msgs/TwistStamped.h>
+#include <keyboard/Key.h>
 #include <stdio.h>
 #include <ros/ros.h>
 
@@ -30,7 +31,9 @@ public:
     boost::shared_ptr<ros::NodeHandle> nh;
     void update(const ros::TimerEvent& event);
     ros::Subscriber flightSateSub;
+    ros::Subscriber commandSubscriber;
     void receiveFlightSate(smarteye_common::flightStateMsg flightMsg);
+    void receiveCommand(keyboard::Key keycode);
     Plan controlPlan;
     DirectGuidInf directGuide;
     CtrlStruct controlResult;

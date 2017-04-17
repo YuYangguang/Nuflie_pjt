@@ -56,10 +56,15 @@ static void *readPx4(void *ptr)
 }
 int main(int argc, char **argv)
 {
-
+    std::string Px4PortName;
     ROS_INFO("start comm_node process");
     ros::Time::init();
     this_comm.init(argc,argv,"comm_code");
+//    bool IsParamGet=this_comm.nh->getParam("Px4PortName",Px4PortName);
+//    if(IsParamGet==true)
+//    {
+//        printf("get param sucess \n");
+//    }
     int ret = pthread_create(&this_comm.threadPx4R, NULL, readPx4, NULL);
     if(ret)
     {

@@ -18,14 +18,14 @@ smarteye::comm::~comm()
 void smarteye::comm::init(int argc, char **argv, const char *name)
 {
     ros::init(argc,argv,name);
-    nh = boost::make_shared<ros::NodeHandle>();
+    nh = boost::make_shared<ros::NodeHandle>("~");
     std::string Px4PortName;
     std::string P00PortName;
-    Px4PortName="/dev/ttyACM0";
+
     bool IsParamGet=nh->getParam("Px4PortName",Px4PortName);
     if(IsParamGet==false)
     {
-        printf("get param failture \n");
+        printf("get param success \n");
     }
 
     //printf("PortName is %s",Px4PortName);
@@ -117,50 +117,50 @@ void smarteye::comm::writeSetAttitude()
 
 void smarteye::comm::sendCommand(const keyboard::Key &key)
 {
-    switch(key.code)
-    {
+//    switch(key.code)
+//    {
 
 
 
-    case '9':    //armed
-    {
-        arm_cmd.request.value = true;
-        arming_client.call(arm_cmd);
-        if (arm_cmd.response.success)
-            ROS_WARN_STREAM("Vehicle armed");
-        break;
+//    case '9':    //armed
+//    {
+//        arm_cmd.request.value = true;
+//        arming_client.call(arm_cmd);
+//        if (arm_cmd.response.success)
+//            ROS_WARN_STREAM("Vehicle armed");
+//        break;
 
-    }
+//    }
 
 
-    case '0':   //disarmedd
-    {
-        arm_cmd.request.value = false;
-        arming_client.call(arm_cmd);
-        if (!arm_cmd.response.success)
-        {
-            ROS_WARN_STREAM("Disarm unsuccessful");
-        }
-        if (arm_cmd.response.success)
-            ROS_WARN_STREAM("Vehicle disarmed");
-        break;
-    }
-    case '8':   //offboard
-    {
+//    case '0':   //disarmedd
+//    {
+//        arm_cmd.request.value = false;
+//        arming_client.call(arm_cmd);
+//        if (!arm_cmd.response.success)
+//        {
+//            ROS_WARN_STREAM("Disarm unsuccessful");
+//        }
+//        if (arm_cmd.response.success)
+//            ROS_WARN_STREAM("Vehicle disarmed");
+//        break;
+//    }
+//    case '8':   //offboard
+//    {
 
-        offb_set_mode.request.custom_mode = "OFFBOARD";
-        set_mode_client.call(offb_set_mode);
+//        offb_set_mode.request.custom_mode = "OFFBOARD";
+//        set_mode_client.call(offb_set_mode);
 
-        if (offb_set_mode.response.success)
-            ROS_WARN_STREAM("Offboard enabled");
-        break;
-    }
-    default:
-    {
+//        if (offb_set_mode.response.success)
+//            ROS_WARN_STREAM("Offboard enabled");
+//        break;
+//    }
+//    default:
+//    {
 
-        break;
-    }
-    }
+//        break;
+//    }
+//    }
 
 }
 

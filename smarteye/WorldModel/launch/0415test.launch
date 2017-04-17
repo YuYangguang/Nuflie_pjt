@@ -8,4 +8,4 @@
  <node name="control_node" pkg="control" type="control_node"  output="screen">
  </node>
 
-</launch>f
+</launch>
